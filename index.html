@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guess The Number Game</title>
+    <link rel="stylesheet" href="https://pyscript.net/releases/2024.5.1/core.css">
+    <script type="module" src="https://pyscript.net/releases/2024.5.1/core.js"></script>
+</head>
+<body>
+    <h1 align="center">Guess The Number Game</h1>
+    <div align="center">
+        <p id="level-text">Level 1: Guess a number between 0 and 3</p>
+        <input type="number" id="user-input">
+        <button py-click="check_guess">Submit</button>
+        <p id="result"></p>
+    </div>
+
+    <py-env>
+        - numpy
+        - pyscript
+    </py-env>
+
+    <py-script>
+from pyscript import document
+import random
+
+# Game Variables
+counters = [1, 1, 1, 1]
+random_nums = [random.randint(0, 3), random.randint(0, 5), random.randint(0, 10), random.randint(0, 100)]
+level = 1
+
+def check_guess(event=None):  
+    global level
+    user_input = document.querySelector("#user-input").value  
+
+    if user_input.strip() == "":
+        document.querySelector("#result").innerText = "Please enter a number!"
+        return
+    
+    n = int(user_input)
+    
+    if n == random_nums[level - 1]:  
+        document.querySelector("#result").innerText = f'Yes! Correct number is {random_nums[level - 1]} in {counters[level-1]} attempts.'
+        if level < 4:
+            level += 1
+            next_level()
+    else:
+        counters[level-1] += 1
+        document.querySelector("#result").innerText = "Incorrect! Try again."
+
+def next_level():
+    ranges = [3, 5, 10, 100]
+    document.querySelector("#level-text").innerText = f"Level {level}: Guess a number between 0 and {ranges[level-1]}"
+    document.querySelector("#user-input").value = ""
+    </py-script>
+</body>
+</html>
